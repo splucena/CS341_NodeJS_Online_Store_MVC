@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <form action="/users/save_user" method="post">
+                <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
+                <p>UserId:
+                    <% if (docreate) { %>
+                    <input type="text" name="userid" value="">
+                    <% } else { %>
+                    <input type="hidden" name="userid" value="<%= userid %>">
+                    <% } %>
+                </p>
+                <p>Username:
+                    <input type="text" name="username" value="<%= username %>">
+                </p>
+                <p>Password:
+                    <input type="text" name="password" value="<%= password %>">
+                </p>
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

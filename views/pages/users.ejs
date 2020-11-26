@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <% for (let i = 0; i < userslist.length; i++) { %>
+            <p><%= userslist[i]['userid'] %></p>
+            <p><%= userslist[i]['username'] %></p>
+            <p><%= userslist[i]['password'] %></p>
+            <% } %>
+        </div>
+    </main>
+</body>
+
+</html>
