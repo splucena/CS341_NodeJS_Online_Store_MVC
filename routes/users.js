@@ -2,7 +2,8 @@ const util = require("util");
 var express = require("express");
 var router = express.Router();
 const users = require("../models/users-memory");
-const { notStrictEqual } = require("assert");
+const { notStrictEqual, notEqual } = require("assert");
+const { AsyncLocalStorage } = require("async_hooks");
 
 /* Add User. */
 
@@ -13,6 +14,7 @@ router.get("/add_user", (req, res, next) => {
 		userid: "",
 		username: undefined,
 		password: undefined,
+		user: false,
 	});
 });
 
@@ -49,6 +51,34 @@ router.get("/user_view", async (req, res, next) => {
 		password: req.query.password,
 		user: user,
 	});
+});
+
+// Edit User
+router.get("/user_edit", async (req, res, next) => {
+	let user = await users.read(req.query.userid);
+	res.render("pages/useredit", {
+		title: user ? "Edit " + user.userid : "Add a USer",
+		docreate: false,
+		userid: req.query.userid,
+		user: user,
+	});
+});
+
+// Delete user
+router.get("/user_destroy", async (req, res, next) => {
+	let user = await users.read(req.query.userid);
+	res.render("pages/userdestroy", {
+		title: user ? user.userid : "",
+		userid: req.query.userid,
+		user: user,
+	});
+});
+
+//
+router.post("/users_dc", async (req, res, next) => {
+	console.log("bbbbbbbbbbbb");
+	await users.destroy(req.body.userid);
+	res.redirect("/");
 });
 
 module.exports = router;

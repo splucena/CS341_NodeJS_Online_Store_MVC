@@ -17,14 +17,14 @@
                     <% if (docreate) { %>
                     <input type="text" name="userid" value="">
                     <% } else { %>
-                    <input type="hidden" name="userid" value="<%= userid %>">
+                    <input type="text" readonly name="userid" value="<%= userid %>">
                     <% } %>
                 </p>
                 <p>Username:
-                    <input type="text" name="username" value="<%= username %>">
+                    <input type="text" name="username" value="<%= user ? user.username : '' %>">
                 </p>
                 <p>Password:
-                    <input type="text" name="password" value="<%= password %>">
+                    <input type="text" name="password" value="<%= user ?  user.password : '' %>">
                 </p>
                 <br>
                 <input type="submit" value="Submit">

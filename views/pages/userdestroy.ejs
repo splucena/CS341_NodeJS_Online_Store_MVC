@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <form action="/users_dc" method="post">
+                <input type="hidden" name="userid" value="<%= user ? user.userid : '' %>">
+                <p>Delete <%= user.username %></p>
+                <br><input type="submit" value="DELETE">
+                | <a href="/users/user_view?userid=<%= user.userid %>">Cancel</a>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>
