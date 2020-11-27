@@ -8,7 +8,9 @@ const config = {
 	port: process.env.DB_PORT,
 };
 
-const pool = new pg.Pool(config);
+// connectionString: process.env.DATABASE_URL
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+//const pool = new pg.Pool(config);
 
 async function query(q) {
 	const client = await pool.connect();
