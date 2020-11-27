@@ -46,9 +46,12 @@ router.post("/save_user", async (req, res, next) => {
 router.get("/user_view", async (req, res, next) => {
 	console.log(req.query.userid);
 	let user = await users.read(req.query.userid);
+
+	console.log(user);
+
 	res.render("pages/userview", {
-		title: user ? user.userid : "",
-		userid: user.userid,
+		title: user ? user.userid : user.user_id,
+		userid: user ? user.userid : user.user_id,
 		username: req.query.username,
 		password: req.query.password,
 		user: user,
@@ -58,6 +61,9 @@ router.get("/user_view", async (req, res, next) => {
 // Edit User
 router.get("/user_edit", async (req, res, next) => {
 	let user = await users.read(req.query.userid);
+	//console.log(1111);
+	//console.log(user);
+
 	res.render("pages/useredit", {
 		title: user ? "Edit " + user.userid : "Add a USer",
 		docreate: false,

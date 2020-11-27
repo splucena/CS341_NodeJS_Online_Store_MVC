@@ -44,13 +44,13 @@ exports.create = async function (
 	passwd
 ) {
 	try {
-		let res = await pool.query(
-			`INSERT INTO users (first_name, last_name, username, passwd) 
-			 VALUES('${first_name}', '${last_name}', '${username}', '${passwd}') 
-			 RETURNING user_id`
-		);
+		const text =
+			"INSERT INTO users (first_name, last_name, username, passwd) VALUES($1, $2, $3, $4) RETURNING user_id";
+		const values = [first_name, last_name, username, passwd];
 
-		userid = res.rows[0]["user_id"];
+		let res = await pool.query(text, values);
+
+		userid = res.rows[0].user_id;
 		let user = new User(userid, first_name, last_name, username, passwd);
 
 		// create client copy of user
@@ -83,20 +83,44 @@ exports.update = async function (
 
 		return user;
 	} catch (err) {
-		console.log(err);
+		console.log("Database" + err);
 	}
 };
 
 exports.read = async function (userid) {
-	if (users[userid]) return users[userid];
-	else throw new Error(`User ${userid} does not exist`);
+	try {
+		const text =
+			"SELECT user_id as userid, first_name, last_name, username, passwd FROM users";
+		const res = await pool.query(text);
+
+		res.rows.forEach((val) => {
+			users[val.userid] = val;
+		});
+
+		if (users[userid]) {
+			return users[userid];
+		} else {
+			throw new Error(`User ${userid} does not exist`);
+		}
+	} catch (err) {
+		console.log(err);
+	}
 };
 
 exports.destroy = async function (userid) {
-	if (users[userid]) {
-		delete users[userid];
-	} else {
-		throw new Error(`User ${userid} does not exist`);
+	try {
+		const text = "DELETE FROM users WHERE user_id = $1";
+		const value = [userid];
+
+		await pool.query(text, value);
+
+		if (users[userid]) {
+			delete users[userid];
+		} else {
+			throw new Error(`User ${userid} does not exist`);
+		}
+	} catch (err) {
+		console.log(err);
 	}
 };
 
