@@ -1,13 +1,18 @@
-const util = require("util");
 const express = require("express");
 const router = express.Router();
 const users = require("../models/users-memory");
-const { notStrictEqual, notEqual } = require("assert");
-const { AsyncLocalStorage } = require("async_hooks");
 
 router.get("/", async (req, res, next) => {
 	let userslist = await users.userlist();
 	res.render("pages/users", { title: "Users", userslist: userslist });
+});
+
+router.get("/user_detail/:id", async (req, res, next) => {
+	let userid = req.params.id;
+	console.log("AAAAAAAAAAAAAA", userid);
+	let user = await users.getUserDetail(userid);
+	console.log(user);
+	res.send({ user: user });
 });
 
 /* Add User. */

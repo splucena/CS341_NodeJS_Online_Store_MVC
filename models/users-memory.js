@@ -107,6 +107,24 @@ exports.read = async function (userid) {
 	}
 };
 
+exports.getUserDetail = async function (userid) {
+	try {
+		const text =
+			"SELECT user_id as userid, first_name, last_name, username, passwd FROM users WHERE user_id = $1";
+		const value = [userid];
+
+		const res = await pool.query(text, value);
+		// I could have taken the value from users
+		// but to illustrate ajax call
+		// Im going to get fetch value directly
+		// from the database
+		//let user = users[userid];
+		return res.rows;
+	} catch (err) {
+		console.log("Database " + err);
+	}
+};
+
 exports.destroy = async function (userid) {
 	try {
 		const text = "DELETE FROM users WHERE user_id = $1";

@@ -13,41 +13,39 @@
         <div>
             <h1><%= title %></h1>
         </div>
-        <div>
-            <form action="/users/save_user" method="POST">
-                <div class="form-group">
-                    <label for="userid">User ID</label>
-                    <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
-                    <% if (docreate) { %>
-                    <input type="hidden" class="form-control" name="userid" value="">
-                    <% } else { %>
-                    <input type="hidden" name="userid" value="<%= userid %>">
-                    <span><%= userid %></span>
-                    <% } %>
-                </div>
-                <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" class="form-control" name="first_name"
-                        value="<%= user ? user.first_name : '' %>">
-                </div>
-                <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" value="<%= user ?  user.last_name : '' %>">
-                </div>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" name="username" value="<%= user ? user.username : '' %>">
-                </div>
-                <div class="form-group">
-                    <label for="passwd">Password</label>
-                    <input type="password" class="form-control" name="passwd" value="<%= user ?  user.passwd : '' %>">
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a class="btn btn-success" href="/users">Back to List</a>
-                </div>
-            </form>
-        </div>
+
+        <form action="/users/save_user" method="POST">
+            <div class="form-group">
+                <label for="userid">User ID</label>
+                <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
+                <% if (docreate) { %>
+                <input type="hidden" class="form-control" name="userid" value="">
+                <% } else { %>
+                <input type="hidden" name="userid" value="<%= userid %>">
+                <span><%= userid %></span>
+                <% } %>
+            </div>
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" class="form-control" name="first_name" value="<%= user ? user.first_name : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" name="last_name" value="<%= user ?  user.last_name : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" value="<%= user ? user.username : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="passwd">Password</label>
+                <input type="password" class="form-control" name="passwd" value="<%= user ?  user.passwd : '' %>">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-success" href="/users">Back to List</a>
+            </div>
+        </form>
     </main>
     <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>
