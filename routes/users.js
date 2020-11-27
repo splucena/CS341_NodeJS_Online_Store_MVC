@@ -74,8 +74,8 @@ router.get("/user_destroy", async (req, res, next) => {
 	});
 });
 
-//
-router.post("/users_dc", async (req, res, next) => {
+// Confirm delete user
+router.post("/users_delete", async (req, res, next) => {
 	console.log("bbbbbbbbbbbb");
 	await users.destroy(req.body.userid);
 	res.redirect("/");
