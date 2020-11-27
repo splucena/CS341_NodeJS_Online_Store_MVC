@@ -11,14 +11,18 @@
     <% include ../partials/nav.ejs %>
     <main>
         <div>
-            <h1><%= title %></h1>
+            <h1>Delete <%= title %></h1>
         </div>
         <div>
-            <form action="/users/users_delete" method="post">
+            <form action="/users/users_delete" method="POST">
                 <input type="hidden" name="userid" value="<%= user ? user.userid : '' %>">
-                <p>Delete <%= user.username %></p>
-                <br><input type="submit" value="DELETE">
-                | <a href="/users/user_view?userid=<%= user.userid %>">Cancel</a>
+                <div class="form-group">
+                    <p>Delete <%= user.username %></p>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a href="/users" class="btn btn-success">Cancel</a>
+                </div>
             </form>
         </div>
     </main>

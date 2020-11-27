@@ -44,7 +44,8 @@ router.post("/save_user", async (req, res, next) => {
 		);
 	}
 
-	res.redirect("/users/user_view?userid=" + user.userid);
+	//res.redirect("/users/user_view?userid=" + user.userid);
+	res.redirect("/users");
 });
 
 // Read User
