@@ -14,7 +14,7 @@
             <% if (user) { %>
             <h3><%= user.userid %></h3>
             <p><%= user.username %></p>
-            <p><%= user.password %></p>
+            <p><%= user.passwd %></p>
 
             <hr>
             <p><a href="/users/user_destroy?userid=<%= user.userid %>">Delete</a>
@@ -22,6 +22,7 @@
             <% } %>
         </div>
     </main>
+    <% include ../partials/scripts.ejs %>
 </body>
 
 </html>

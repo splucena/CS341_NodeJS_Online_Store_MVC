@@ -6,12 +6,13 @@ const { notStrictEqual, notEqual } = require("assert");
 const { AsyncLocalStorage } = require("async_hooks");
 
 /* Add User. */
-
 router.get("/add_user", (req, res, next) => {
 	res.render("pages/useredit", {
 		title: "Add a User",
 		docreate: true,
-		userid: "",
+		userid: undefined,
+		first_name: undefined,
+		last_name: undefined,
 		username: undefined,
 		password: undefined,
 		user: false,
@@ -22,22 +23,23 @@ router.post("/save_user", async (req, res, next) => {
 	let user;
 	if (req.body.docreate === "create") {
 		user = await users.create(
-			req.body.userid,
+			null,
+			req.body.first_name,
+			req.body.last_name,
 			req.body.username,
-			req.body.password
+			req.body.passwd
 		);
 	} else {
 		user = await users.update(
 			req.body.userid,
+			req.body.first_name,
+			req.body.last_name,
 			req.body.username,
-			req.body.password
+			req.body.passwd
 		);
 	}
 
-	console.log("save user AAAAAAAA");
-	console.log(req.body.userid);
-
-	res.redirect("/users/user_view?userid=" + req.body.userid);
+	res.redirect("/users/user_view?userid=" + user.userid);
 });
 
 // Read User
@@ -76,7 +78,6 @@ router.get("/user_destroy", async (req, res, next) => {
 
 // Confirm delete user
 router.post("/users_delete", async (req, res, next) => {
-	console.log("bbbbbbbbbbbb");
 	await users.destroy(req.body.userid);
 	res.redirect("/");
 });

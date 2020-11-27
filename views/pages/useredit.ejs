@@ -20,17 +20,25 @@
                     <input type="text" readonly name="userid" value="<%= userid %>">
                     <% } %>
                 </p>
+                <p>Firstname:
+                    <input type="text" name="first_name" value="<%= user ? user.first_name : '' %>">
+                </p>
+                <p>Lastname:
+                    <input type="text" name="last_name" value="<%= user ?  user.last_name : '' %>">
+                </p>
                 <p>Username:
                     <input type="text" name="username" value="<%= user ? user.username : '' %>">
                 </p>
                 <p>Password:
-                    <input type="text" name="password" value="<%= user ?  user.password : '' %>">
+                    <input type="text" name="passwd" value="<%= user ?  user.passwd : '' %>">
                 </p>
                 <br>
                 <input type="submit" value="Submit">
             </form>
         </div>
     </main>
+
+    <% include ../partials/scripts.ejs %>
 </body>
 
 </html>

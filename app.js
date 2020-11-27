@@ -4,10 +4,31 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+// db environment
+require("dotenv").config();
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
+
+// libraries
+app.use(
+	"/css",
+	express.static(path.join(__dirname, "node_modules/bootstrap/dist/css"))
+);
+app.use(
+	"/js",
+	express.static(path.join(__dirname, "node_modules/bootstrap/dist/js"))
+);
+app.use(
+	"/js",
+	express.static(path.join(__dirname, "node_modules/jquery/dist"))
+);
+app.use(
+	"/js",
+	express.static(path.join(__dirname, "node_modules/popper.js/dist/umd"))
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

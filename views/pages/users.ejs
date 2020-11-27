@@ -11,13 +11,33 @@
     <% include ../partials/nav.ejs %>
     <main>
         <div>
-            <% for (let i = 0; i < userslist.length; i++) { %>
-            <p><%= userslist[i]['userid'] %></p>
-            <p><%= userslist[i]['username'] %></p>
-            <p><%= userslist[i]['password'] %></p>
-            <% } %>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Username</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <% for (let i = 0; i < userslist.length; i++) { %>
+                <tr>
+                    <td><%= userslist[i]['first_name'] %></td>
+                    <td><%= userslist[i]['last_name'] %></td>
+                    <td><%= userslist[i]['username'] %></td>
+                    <td><%= userslist[i]['passwd'] %></td>
+                    <td><a href="/users/user_edit?userid=<%= userslist[i]['user_id'] %>">Details</a></td>
+                    <td><a href="/users/user_edit?userid=<%= userslist[i]['user_id'] %>">Edit</a></td>
+                    <td><a href="/users/user_destroy?userid=<%= userslist[i]['user_id'] %>">Delete</a></td>
+                </tr>
+                <% } %>
+            </table>
         </div>
     </main>
+    <% include ../partials/scripts.ejs %>
 </body>
 
 </html>
