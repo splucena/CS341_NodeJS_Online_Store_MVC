@@ -11,6 +11,9 @@
     <% include ../partials/nav.ejs %>
     <main>
         <div>
+            <h1><%= title %></h1>
+        </div>
+        <div>
             <% if (user) { %>
             <h3><%= user.userid %></h3>
             <p><%= user.username %></p>
@@ -22,6 +25,7 @@
             <% } %>
         </div>
     </main>
+    <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>
 </body>
 

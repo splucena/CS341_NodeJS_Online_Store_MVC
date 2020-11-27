@@ -1,9 +1,14 @@
 const util = require("util");
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 const users = require("../models/users-memory");
 const { notStrictEqual, notEqual } = require("assert");
 const { AsyncLocalStorage } = require("async_hooks");
+
+router.get("/", async (req, res, next) => {
+	let userslist = await users.userlist();
+	res.render("pages/users", { title: "Users", userslist: userslist });
+});
 
 /* Add User. */
 router.get("/add_user", (req, res, next) => {
@@ -47,7 +52,7 @@ router.get("/user_view", async (req, res, next) => {
 	console.log(req.query.userid);
 	let user = await users.read(req.query.userid);
 
-	console.log(user);
+	console.log(user.user);
 
 	res.render("pages/userview", {
 		title: user ? user.userid : user.user_id,
@@ -61,8 +66,6 @@ router.get("/user_view", async (req, res, next) => {
 // Edit User
 router.get("/user_edit", async (req, res, next) => {
 	let user = await users.read(req.query.userid);
-	//console.log(1111);
-	//console.log(user);
 
 	res.render("pages/useredit", {
 		title: user ? "Edit " + user.userid : "Add a USer",
@@ -85,7 +88,7 @@ router.get("/user_destroy", async (req, res, next) => {
 // Confirm delete user
 router.post("/users_delete", async (req, res, next) => {
 	await users.destroy(req.body.userid);
-	res.redirect("/");
+	res.redirect("/users");
 });
 
 module.exports = router;

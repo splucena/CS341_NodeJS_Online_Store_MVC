@@ -1,0 +1,21 @@
+<footer>
+    <div>
+        <span>&copy; Sumilang R. Plucena, All rights reserved</span><br />
+        <span>All images used are believed to be in "Fair Use".</span><br /><span>Please notify author if
+            any are not and they
+            will be
+            removed.</span><br />
+        <span id="current_date"></span>
+    </div>
+    <script>
+        var d = new Date();
+
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
+
+        var output = d.getFullYear() + '.' +
+            (month < 10 ? '0' : '') + month + '.' +
+            (day < 10 ? '0' : '') + day;
+        $('#current_date').html(output);
+    </script>
+</footer>

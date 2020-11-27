@@ -11,6 +11,9 @@
     <% include ../partials/nav.ejs %>
     <main>
         <div>
+            <h1><%= title %></h1>
+        </div>
+        <div>
             <form action="/users/users_delete" method="post">
                 <input type="hidden" name="userid" value="<%= user ? user.userid : '' %>">
                 <p>Delete <%= user.username %></p>
@@ -19,7 +22,7 @@
             </form>
         </div>
     </main>
-
+    <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>
 </body>
 

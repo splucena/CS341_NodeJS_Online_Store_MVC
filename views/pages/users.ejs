@@ -11,13 +11,19 @@
     <% include ../partials/nav.ejs %>
     <main>
         <div>
+            <h1><%= title %></h1>
+        </div>
+        <div>
+            <a href='/users/add_user' class="btn btn-primary">Add User</a>
+        </div>
+        <div>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Username</th>
-                        <th></th>
+                        <th>Password</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -37,6 +43,7 @@
             </table>
         </div>
     </main>
+    <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>
 </body>
 

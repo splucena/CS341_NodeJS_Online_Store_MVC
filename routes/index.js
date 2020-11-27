@@ -8,15 +8,10 @@ router.get('/', function(req, res, next) {
 });*/
 
 /* GET home page */
-router.get("/", async (req, res, next) => {
-	let userslist = await users.userlist();
-	//let userIdPromises = userlist.map((userid) => {
-	//	return users.read(userid);
-	//});
-
-	//let userslist = await Promise.all(userIdPromises);
-	//console.log(userslist);
-	res.render("pages/users", { title: "Users", userslist: userslist });
+router.get("/", (req, res, next) => {
+	res.render("pages/index", {
+		title: "SRP Online Store",
+	});
 });
 
 module.exports = router;
