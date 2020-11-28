@@ -1,0 +1,31 @@
+After completing the assignment, please answer the questions in this text file and submit it to I-Learn.
+
+1. Project Title / One sentence description:
+SRP Online Store
+
+2. Copy and paste the URL for your web application (if applicable):
+https://cryptic-waters-14698.herokuapp.com/users
+
+3. Copy and paste the URL for your source code repository (e.g., GitHub):
+https://github.com/splucena/CS341_NodeJS_Online_Store_MVC
+
+4. Describe the functionality that is currently working, along with any special instructions of how to use your web application:
+NO special instructions. CRUD for user is alreay working.
+
+5. Describe the features that are not yet working correctly.
+Product management, customer management, and order management.
+
+6. Please select the category you feel best describes your assignment: 5
+1 - Some attempt was made
+2 - Developing, but significantly deficient
+3 - Slightly deficient, but still mostly adequate
+4 - Meets requirements
+5 - Shows creativity and excels above and beyond requirements
+
+
+7. Provide a brief justification (1-2 sentences) for selecting that category.
+I have overhauled the application to follow the MVC design pattern. I have implemented
+the PARC principle in the design of the app.
+
+8. Please list any questions you have for the instructor regarding this assignment or this week's topic.
+N/A
