@@ -37,6 +37,16 @@ nav a:hover {
 	background-color: #5D001E !important;
 }
 
+.dropdown-item {
+	color: #272727 !important;
+	padding-top: 8px !important;
+	padding-bottom: 8px !important;
+}
+
+.dropdown-item:hover {
+	background-color: #5D001E !important;
+}
+
 main {
 	width: 95%;
 	margin: 0 auto;
