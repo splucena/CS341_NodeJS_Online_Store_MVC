@@ -29,6 +29,7 @@ router.get("/add_user", (req, res, next) => {
 	});
 });
 
+// Create User
 router.post("/save_user", async (req, res, next) => {
 	let user;
 	if (req.body.docreate === "create") {
@@ -51,6 +52,23 @@ router.post("/save_user", async (req, res, next) => {
 
 	//res.redirect("/users/user_view?userid=" + user.userid);
 	res.redirect("/users");
+});
+
+// Create New Account (sign up)
+router.post("/sign_up", async (req, res, next) => {
+	let user;
+
+	user = await users.create(
+		null,
+		req.body.first_name,
+		req.body.last_name,
+		req.body.username,
+		req.body.passwd
+	);
+	res.render("pages/index", {
+		success: "Account created successfully! You can now login.",
+		title: "SRP Online Store",
+	});
 });
 
 // Read User

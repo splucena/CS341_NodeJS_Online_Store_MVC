@@ -10,8 +10,73 @@
 <body>
     <% include ../partials/nav.ejs %>
     <main>
-        <h1><%= title %></h1>
-        <p>Welcome to <%= title %></p>
+        <div class="main-home">
+            <div>
+                <h1><%= title %></h1>
+                <p>Welcome to <%= title %></p>
+            </div>
+            <div class="shadow-sm p-3 mb-5 bg-white">
+                <% if (locals.success) { %>
+                <h5><%= success %></h5>
+                <% } else { %>
+                <h5>Login</h5>
+                <% } %>
+                <hr>
+                <form action="/login" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" class="form-control" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwd">Password</label>
+                        <input type="password" name="passwd" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <hr>
+                <button type="button" class="btn btn-success btn-block" data-toggle="modal"
+                    data-target="#create_new_account">Create New Account</button>
+            </div>
+
+            <!--Modal: Create New Account-->
+            <div class="modal fade" id="create_new_account" tabindex="-1" role="dialog"
+                aria-labelledby="Create New Account">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Create New Account</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="users/sign_up" method="POST">
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" placeholder="First name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" placeholder="Last name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" name="username" class="form-control" placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="passwd">Password</label>
+                                    <input type="password" name="passwd" class="form-control" placeholder="Password">
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>

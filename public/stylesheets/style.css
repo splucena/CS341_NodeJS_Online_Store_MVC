@@ -89,7 +89,8 @@ footer {
 	color: #EE4C7C;
 }
 
-.main-users {
+.main-users,
+.main-home {
 	display: grid;
 	grid-template-columns: 1fr;
 }
@@ -111,7 +112,8 @@ footer {
 		width: 80%;
 	}
 
-	.main-users {
+	.main-users,
+	.main-home {
 		display: grid;
 		grid-template-columns: 70% 30%;
 		column-gap: 15px;
