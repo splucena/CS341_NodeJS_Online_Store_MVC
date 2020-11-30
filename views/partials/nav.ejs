@@ -16,6 +16,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
+                <% if ( typeof s_username != 'undefined' && s_username) { %>
                 <li class="nav-item">
                     <a class="nav-link" href="/users">Users</a>
                 </li>
@@ -34,12 +35,20 @@
                         <a class="dropdown-item" href="#">Inventory</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Orders</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Orders
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Create</a>
+                        <a class="dropdown-item" href="#">Process</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
+                <% } %>
             </ul>
         </div>
     </nav>

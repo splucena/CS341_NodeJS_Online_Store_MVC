@@ -46,27 +46,34 @@ router.get("/", (req, res, next) => {
 // Login
 router.post("/login", async (req, res, next) => {
 	let success;
+	let hour = 3600000;
 	res.setHeader("Content-Type", "text/html");
 	sess = req.session;
+	sess.cookie.expires = new Date(Date.now() + hour);
+	sess.cookie.maxAge = hour;
 	//success = await users.login(req.body.username, req.body.passwd);
 	success = await users.login(req, res);
 
 	let validLogin = success.success;
 
 	if (validLogin) {
-		sess.username = req.body.username;
-		console.log(success.success);
+		//sess.username = req.body.username;
+		req.session.username = req.body.username;
+		//res.locals.s_username = sess.username;
+		//console.log(success.success);
 		//console.log(sess);
 		res.redirect("/users");
+		//res.render("pages/users", { s_username: sess.username });
 	} else {
 		console.log(success.success);
 		// Use redirect
 		// Update / path to store correct object
 		// containing title and success keys
-		res.render("pages/index", {
+		/*res.render("pages/index", {
 			title: "Freshness guaranteed!",
 			success: success.success,
-		});
+		});*/
+		res.redirect("/");
 	}
 });
 

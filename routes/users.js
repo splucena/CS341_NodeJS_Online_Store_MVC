@@ -5,7 +5,11 @@ const users = require("../models/users-memory");
 router.get("/", async (req, res, next) => {
 	//res.setHeader("Content-Type", "text/html");
 	let userslist = await users.userlist();
-	res.render("pages/users", { title: "Users", userslist: userslist });
+	res.render("pages/users", {
+		title: "Users",
+		userslist: userslist,
+		s_username: req.session.username,
+	});
 });
 
 router.get("/user_detail/:id", async (req, res, next) => {
@@ -71,13 +75,15 @@ router.get("/user_view", async (req, res, next) => {
 
 // Edit User
 router.get("/user_edit", async (req, res, next) => {
-	let user = await users.read(req.query.userid);
-
+	//let user = await users.read(req.query.userid);
+	let user = await users.getUserDetail(req.query.userid);
+	//console.log(user);
 	res.render("pages/useredit", {
-		title: user ? "Edit " + user.userid : "Add a USer",
+		title: user ? "Edit " + user[0].userid : "Add a USer",
 		docreate: false,
-		userid: req.query.userid,
-		user: user,
+		//userid: req.query.userid,
+		userid: user[0].userid,
+		user: user[0],
 	});
 });
 

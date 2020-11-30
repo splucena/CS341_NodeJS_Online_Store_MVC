@@ -1,5 +1,6 @@
 const User = require("./User");
 const pg = require("pg");
+const bcrypt = require("bcrypt");
 
 const config = {
 	user: process.env.DB_USER,
@@ -12,31 +13,40 @@ const config = {
 //const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const pool = new pg.Pool(config);
 
-async function query(q) {
-	const client = await pool.connect();
-	let res;
-	try {
-		await client.query("BEGIN");
-		try {
-			res = await client.query(q);
-			await client.query("COMMIT");
-		} catch (err) {
-			await client.query("ROLLBACK");
-			throw err;
-		}
-	} finally {
-		client.release();
-	}
-	return res;
-}
-
 let users = [];
 let user = undefined;
 
-/*exports.update = exports.create = async function (userid, username, password) {
-	users[userid] = new User(userid, username, password);
-	return users[userid];
-};*/
+async function hashPassword(passwd) {
+	// hash password
+	const saltRounds = 10;
+
+	// bcrypt doesn't return a promise
+	// instatiate a new promise to make bcrypt async
+	let hashedPassword = await new Promise((resolve, reject) => {
+		bcrypt.hash(passwd, saltRounds, (err, hash) => {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			resolve(hash);
+		});
+	});
+
+	return hashedPassword;
+}
+
+async function unhashPassword(passwd, hash) {
+	let unhashedPassword = await new Promise((resolve, reject) => {
+		bcrypt.compare(passwd, hash, (err, result) => {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			resolve(result);
+		});
+	});
+	return unhashedPassword;
+}
 
 exports.create = async function (
 	userid,
@@ -46,14 +56,22 @@ exports.create = async function (
 	passwd
 ) {
 	try {
+		let hashedPassword = await hashPassword(passwd);
+
 		const text =
 			"INSERT INTO users (first_name, last_name, username, passwd) VALUES($1, $2, $3, $4) RETURNING user_id";
-		const values = [first_name, last_name, username, passwd];
+		const values = [first_name, last_name, username, hashedPassword];
 
 		let res = await pool.query(text, values);
 
 		userid = res.rows[0].user_id;
-		let user = new User(userid, first_name, last_name, username, passwd);
+		let user = new User(
+			userid,
+			first_name,
+			last_name,
+			username,
+			hashedPassword
+		);
 
 		// create client copy of user
 		users[userid] = user;
@@ -76,13 +94,23 @@ exports.login = async function (req, res) {
 		let success;
 		let username = req.body.username;
 		let passwd = req.body.passwd;
-		const text =
-			"SELECT user_id FROM users WHERE username = $1 AND passwd= $2";
-		const values = [username, passwd];
+
+		const text = "SELECT user_id, passwd FROM users WHERE username = $1";
+		const values = [username];
 		const res = await pool.query(text, values);
-		console.log(res);
+
 		if (res.rowCount > 0) {
-			success = true;
+			let dbHashedPassword = res.rows[0].passwd;
+			let unhashedPassword = await unhashPassword(
+				passwd,
+				dbHashedPassword
+			);
+
+			if (unhashedPassword) {
+				success = true;
+			} else {
+				success = false;
+			}
 		} else {
 			success = false;
 		}
@@ -101,7 +129,6 @@ exports.logout = async function (req, res) {
 	} else {
 		success = false;
 	}
-
 	//res.json({ success: success });
 	return { success: success };
 };
@@ -118,11 +145,50 @@ exports.update = async function (
 	username,
 	passwd
 ) {
-	const text =
-		"UPDATE users SET first_name = $1, last_name = $2, username = $3, passwd = $4 WHERE user_id = $5";
-	const values = [first_name, last_name, username, passwd, userid];
-
 	try {
+		// Get user current detail
+		// compare changes
+		// only update changes
+		let currentUserDetailText =
+			"SELECT first_name, last_name, username, passwd FROM users WHERE user_id = $1";
+		let currentUserDetailValue = [userid];
+		let currentUserDetail = await pool.query(
+			currentUserDetailText,
+			currentUserDetailValue
+		);
+
+		let currentUserDetailResult = currentUserDetail.rows[0];
+		let currentUserDetailFirstName = currentUserDetailResult.first_name;
+		let currentUserDetailLastName = currentUserDetailResult.last_name;
+		let currentUserDetailUsername = currentUserDetailResult.username;
+		let currentUserDetailPassword = currentUserDetailResult.passwd;
+
+		let values = [];
+		values.push(
+			first_name !== currentUserDetailFirstName
+				? first_name
+				: currentUserDetailFirstName
+		);
+		values.push(
+			last_name !== currentUserDetailLastName
+				? last_name
+				: currentUserDetailLastName
+		);
+		values.push(
+			username !== currentUserDetailUsername
+				? username
+				: currentUserDetailUsername
+		);
+		values.push(
+			passwd !== currentUserDetailPassword
+				? await hashPassword(passwd)
+				: currentUserDetailPassword
+		);
+		values.push(userid);
+
+		const text =
+			"UPDATE users SET first_name = $1, last_name = $2, username = $3, passwd = $4 WHERE user_id = $5";
+
 		await pool.query(text, values);
 		let user = new User(userid, first_name, last_name, username, passwd);
 		if (users[userid]) {
@@ -169,6 +235,7 @@ exports.getUserDetail = async function (userid) {
 		// Im going to get fetch value directly
 		// from the database
 		//let user = users[userid];
+		console.log(users);
 		return res.rows;
 	} catch (err) {
 		console.log("Database " + err);
