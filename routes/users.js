@@ -3,15 +3,14 @@ const router = express.Router();
 const users = require("../models/users-memory");
 
 router.get("/", async (req, res, next) => {
+	//res.setHeader("Content-Type", "text/html");
 	let userslist = await users.userlist();
 	res.render("pages/users", { title: "Users", userslist: userslist });
 });
 
 router.get("/user_detail/:id", async (req, res, next) => {
 	let userid = req.params.id;
-	console.log("AAAAAAAAAAAAAA", userid);
 	let user = await users.getUserDetail(userid);
-	console.log(user);
 	res.send({ user: user });
 });
 
@@ -52,23 +51,6 @@ router.post("/save_user", async (req, res, next) => {
 
 	//res.redirect("/users/user_view?userid=" + user.userid);
 	res.redirect("/users");
-});
-
-// Create New Account (sign up)
-router.post("/sign_up", async (req, res, next) => {
-	let user;
-
-	user = await users.create(
-		null,
-		req.body.first_name,
-		req.body.last_name,
-		req.body.username,
-		req.body.passwd
-	);
-	res.render("pages/index", {
-		success: "Account created successfully! You can now login.",
-		title: "SRP Online Store",
-	});
 });
 
 // Read User

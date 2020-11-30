@@ -2,6 +2,7 @@ var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
+var session = require("express-session");
 var logger = require("morgan");
 
 // db environment
@@ -11,6 +12,15 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
+
+// Configure session
+app.use(
+	session({
+		secret: "keyboard cat",
+		resave: false,
+		saveUninitialized: true,
+	})
+);
 
 // libraries
 app.use(

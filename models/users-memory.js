@@ -63,6 +63,54 @@ exports.create = async function (
 	}
 };
 
+// Team activity
+exports.login = async function (req, res) {
+	/*if (req.body.username === "admin" && req.body.passwd === "password") {
+		success = true;
+	} else {
+		success = false;
+	}
+
+	return { success: success };*/
+	try {
+		let success;
+		let username = req.body.username;
+		let passwd = req.body.passwd;
+		const text =
+			"SELECT user_id FROM users WHERE username = $1 AND passwd= $2";
+		const values = [username, passwd];
+		const res = await pool.query(text, values);
+		console.log(res);
+		if (res.rowCount > 0) {
+			success = true;
+		} else {
+			success = false;
+		}
+		return { success: success };
+	} catch (err) {
+		console.log("Database " + err);
+	}
+};
+
+exports.logout = async function (req, res) {
+	let success, sess;
+	sess = req.session;
+	if (sess && sess.username) {
+		sess.destroy();
+		success = true;
+	} else {
+		success = false;
+	}
+
+	//res.json({ success: success });
+	return { success: success };
+};
+
+exports.getServerTime = async function () {
+	let requestTime = new Date();
+	return { success: true, requestTime: requestTime };
+};
+
 exports.update = async function (
 	userid,
 	first_name,
