@@ -10,8 +10,8 @@ const config = {
 };
 
 // connectionString: process.env.DATABASE_URL
-//const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const pool = new pg.Pool(config);
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+//const pool = new pg.Pool(config);
 
 let users = [];
 let user = undefined;
@@ -234,8 +234,7 @@ exports.getUserDetail = async function (userid) {
 		// but to illustrate ajax call
 		// Im going to get fetch value directly
 		// from the database
-		//let user = users[userid];
-		console.log(users);
+		//let user = users[userid];W
 		return res.rows;
 	} catch (err) {
 		console.log("Database " + err);
