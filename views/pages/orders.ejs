@@ -23,12 +23,13 @@
                     <thead>
                         <tr>
                             <th>Order #</th>
-                            <th>Customer Name</th>
+                            <th>Customer</th>
                             <th>Status</th>
-                            <th>Date Created</th>
                             <th>Shipping Date</th>
                             <th>Amount</th>
-                            <th>Processor</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <% if (orderlist.length > 0) { %>
@@ -37,10 +38,17 @@
                         <td><%= orderlist[i]['order_no'] %></td>
                         <td><%= orderlist[i]['customer_name'] %></td>
                         <td><%= orderlist[i]['status'] %></td>
-                        <td><%= orderlist[i]['date_created'] %></td>
-                        <td><%= orderlist[i]['shipping_date'] %></td>
-                        <td><%= orderlist[i]['total_amount'] %></td>
-                        <td><%= orderlist[i]['processor'] %></td>
+                        <td><%= orderlist[i]['shipping_date'] ?  orderlist[i]['shipping_date'].getFullYear() + '/' + (orderlist[i]['shipping_date'].getMonth() + 1) + '/' + (orderlist[i]['shipping_date'].getDate()) : '' %>
+                        </td>
+                        <td>$<%= orderlist[i]['total_amount'] %></td>
+                        <td><span class="hand" id="<%= orderlist[i]['order_id'] %>" onclick="getDetails(this.id)"><i
+                                    class="fa fa-clipboard fa-lg text-dark"></i></span>
+                        </td>
+                        <td><a href="/orders/order_edit?orderid=<%= orderlist[i]['order_id'] %>"><i
+                                    class="fas fa-edit fa-lg text-dark"></i></a>
+                        </td>
+                        <td><a href="/orders/order_destroy?orderid=<%= orderlist[i]['order_id'] %>"><i
+                                    class="fas fa-trash fa-lg text-dark"></i></a></td>
                     </tr>
                     <% } %>
                     <% } else { %>
@@ -50,45 +58,136 @@
                     <% } %>
                 </table>
                 <script>
-                    function getDetails(userid) {
-                        console.log(userid);
+                    function getDetails(orderid) {
                         $.ajax({
                             type: 'GET',
-                            url: '/users/user_detail/' + userid,
+                            url: '/orders/order_detail/' + orderid,
                             dataType: 'json',
                         }).done(result => {
-                            console.log(result['user'][0].first_name);
-                            let first_name = result['user'][0].first_name;
-                            let last_name = result['user'][0].last_name;
-                            let username = result['user'][0].username;
-                            let fullname = `${first_name} ${last_name}`;
-                            $("#fullname").html(fullname);
-                            $("#username").html(username);
+
+                            const res = result['order'];
+                            if (res[0]) {
+                                let order_no = res[0]['order_no'];
+                                let status = res[0]['status'];
+                                let customer_name = res[0]['customer_name'];
+                                let date_created = res[0]['date_created'];
+
+                                if (date_created) {
+                                    date_created = new Date(date_created);
+                                    date_created = date_created.getFullYear() + '/' + (date_created.getMonth() +
+                                        1) + '/' + date_created.getDate();
+                                }
+
+                                let shipping_date = res[0]['shipping_date'];
+
+                                if (shipping_date) {
+                                    shipping_date = new Date(shipping_date);
+                                    shipping_date = shipping_date.getFullYear() + '/' + (shipping_date
+                                        .getMonth() +
+                                        1) + '/' + shipping_date.getDate();
+                                }
+
+                                let total_amount = res[0]['total_amount'];
+                                let processor = res[0]['processor'];
+
+                                $("#order_no").html(order_no);
+                                $("#status").html(status).css("textTransform", "capitalize");
+                                $("#customer_name").html(customer_name).css("textTransform", "capitalize");
+                                $("#date_created").html(date_created);
+                                $("#shipping_date").html(shipping_date);
+                                $("#total_amount").html("$" + total_amount);
+                                $("#processor").html(processor).css("textTransform", "capitalize");
+
+                                if (res[0]['product_name']) {
+                                    let order_item_detail = "<table class='table'><thead> \
+                                    <th>Product</th>\
+                                    <th>Quantity</th>\
+                                    <th>Price</th>\
+                                    <th>Subtotal</th></thead><tbody>";
+
+                                    let total = 0;
+                                    for (let i = 0; i < res.length; i++) {
+                                        let subtotal = res[i]['quantity'] * res[i]['unit_price'];
+                                        total += subtotal;
+                                        order_item_detail += "<tr><td>" + res[i]['product_name'] + "</td> \
+                                        <td>" + res[i]['quantity'] + "</td>\
+                                        <td>$" + res[i]['unit_price'] + "</td>\
+                                        <td>$" + subtotal + "</td></tr>"
+                                    }
+
+                                    order_item_detail += "<tr><td colspan='3'>Total</td><td>$" + total +
+                                        "</td></tr></tbody></table>";
+
+                                    $("#order_item_detail").html(order_item_detail);
+                                } else {
+                                    $("#order_item_detail").html('---');
+                                }
+                            } else {
+                                $("#order_no").html('---');
+                                $("#status").html('---');
+                                $("#customer_name").html('---');
+                                $("#date_created").html('---');
+                                $("#shipping_date").html('---');
+                                $("#total_amount").html('---');
+                                $("#processor").html('---');
+                                $("#order_item_detail").html('---');
+                            }
                         }).fail(err => {
-                            $("#fullname").html('---');
-                            $("#username").html('---');
+                            $("#order_no").html('---');
+                            $("#status").html('---');
+                            $("#customer_name").html('---');
+                            $("#date_created").html('---');
+                            $("#shipping_date").html('---');
+                            $("#total_amount").html('---');
+                            $("#processor").html('---');
+                            $("#order_item_detail").html('---');
                         });
                     }
                 </script>
             </div>
             <div class="user-details" id="user-details">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th colspan="2">User Detail</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Full Name</td>
-                            <td id="fullname">---</td>
-                        </tr>
-                        <tr>
-                            <td>Username</td>
-                            <td id="username">---</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Order Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Order #</td>
+                                <td id="order_no">---</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td id="status">---</td>
+                            </tr>
+                            <tr>
+                                <td>Customer</td>
+                                <td id="customer_name">---</td>
+                            </tr>
+                            <tr>
+                                <td>Date Created</td>
+                                <td id="date_created">---</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping Date</td>
+                                <td id="shipping_date">---</td>
+                            </tr>
+                            <tr>
+                                <td>Amount</td>
+                                <td id="total_amount">---</td>
+                            </tr>
+                            <tr>
+                                <td>Processed by</td>
+                                <td id="processor">---</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="order_item_detail">
+
+                </div>
             </div>
         </div>
     </main>

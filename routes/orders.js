@@ -11,4 +11,11 @@ router.get("/", async (req, res, next) => {
 	});
 });
 
+router.get("/order_detail/:id", async (req, res, next) => {
+	let orderid = req.params.id;
+	let order = await orders.getOrderDetail(orderid);
+	//console.log(order);
+	res.send({ order: order });
+});
+
 module.exports = router;
