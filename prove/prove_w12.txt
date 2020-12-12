@@ -1,0 +1,34 @@
+After completing the assignment, please answer the questions in this text file and submit it to I-Learn.
+
+1. Project Title / One sentence description:
+SRP Online Store: App for online shopping.
+
+2. Copy and paste the URL for your web application (if applicable):
+https://cryptic-waters-14698.herokuapp.com/
+
+3. Copy and paste the URL for your source code repository (e.g., GitHub):
+https://github.com/splucena/CS341_NodeJS_Online_Store_MVC
+
+4. Describe the functionality that is currently working, along with any special instructions of how to use your web application:
+Users CRUD, user, signin, signup, user password hashing, and session. Login using admin/1234 credential.
+
+5. Describe the features that are not yet working correctly.
+Products, Customers, and Order Management are not working yet.
+
+
+6. Please select the category you feel best describes your assignment:
+1 - Some attempt was made
+2 - Developing, but significantly deficient
+3 - Slightly deficient, but still mostly adequate
+4 - Meets requirements
+5 - Shows creativity and excels above and beyond requirements
+
+
+7. Provide a brief justification (1-2 sentences) for selecting that category.
+Clean code and consistent design across pages.
+
+8. Please list any questions you have for the instructor regarding this assignment or this week's topic.
+I'm afraid I won't be able to complete the whole application like what I did with PHP. 
+The learning curve was too much in the beginning and I was just starting to pick up the concepts.
+What will be the effect on my final grade if I won't be able complete the deliverables
+I set during the intiial stage of my project?
