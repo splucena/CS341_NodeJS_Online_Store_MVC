@@ -14,7 +14,7 @@
             <h1><%= title %></h1>
         </div>
         <div>
-            <a href='/users/add_user' class="btn btn-success">Add User</a>
+            <a href='/orders/create_order' class="btn btn-success">Create Order</a>
         </div>
 
         <div class="main-users">
@@ -99,7 +99,7 @@
                                 $("#processor").html(processor).css("textTransform", "capitalize");
 
                                 if (res[0]['product_name']) {
-                                    let order_item_detail = "<table class='table'><thead> \
+                                    let order_item_detail = "<h5>Order Items</h5><table class='table'><thead> \
                                     <th>Product</th>\
                                     <th>Quantity</th>\
                                     <th>Price</th>\
@@ -120,7 +120,7 @@
 
                                     $("#order_item_detail").html(order_item_detail);
                                 } else {
-                                    $("#order_item_detail").html('---');
+                                    $("#order_item_detail").html('<h5>No Order Items</h5>');
                                 }
                             } else {
                                 $("#order_no").html('---');

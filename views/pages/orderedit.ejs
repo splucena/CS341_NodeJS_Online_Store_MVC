@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <h1><%= title %></h1>
+        </div>
+
+        <form action="/orders/save_order" method="POST">
+            <div class="form-group">
+                <label for="orderid">Order ID</label>
+                <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
+                <% if (docreate) { %>
+                <input type="hidden" class="form-control" name="orderid" value="">
+                <% } else { %>
+                <input type="hidden" name="userid" value="<%= orderid %>">
+                <span><%= orderid %></span>
+                <% } %>
+            </div>
+            <div class="form-group">
+                <label for="order_no">Order #</label>
+                <input type="text" class="form-control" name="order_no" value="<%= order ? order.order_no : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <input type="text" class="form-control" name="status" value="<%= order ?  order.status : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="customer_name">Customer</label>
+                <input type="text" class="form-control" name="customer_name"
+                    value="<%= order ? order.customer_name : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="date_created">Date Created</label>
+                <input type="date" class="form-control" name="date_created"
+                    value="<%= order ?  order.date_created : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="shipping_date">Shipping Date</label>
+                <input type="date" class="form-control" name="shipping_date"
+                    value="<%= order ?  order.shipping_date : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="total_amount">Total Amount</label>
+                <input type="text" class="form-control" name="total_amount"
+                    value="<%= order ?  order.total_amount : '' %>">
+            </div>
+            <div class="form-group">
+                <label for="processed_by">Processed by</label>
+                <input type="text" class="form-control" name="processed_by"
+                    value="<%= order ?  order.processed_by : '' %>">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-success" href="/orders">Back to List</a>
+            </div>
+        </form>
+    </main>
+    <% include ../partials/footer.ejs %>
+    <% include ../partials/scripts.ejs %>
+</body>
+
+</html>
