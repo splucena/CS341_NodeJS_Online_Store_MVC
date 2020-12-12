@@ -19,18 +19,16 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Billing Address</th>
+                            <th>Name</th>
+                            <th>Address</th>
                             <th>Phone</th>
                         </tr>
                     </thead>
-                    <% for (let i = 0; i < customerlist.length; i++) { %>
+                    <% for (let i = 0; i < productsupplierlist.length; i++) { %>
                     <tr>
-                        <td><%= customerlist[i]['first_name'] %></td>
-                        <td><%= customerlist[i]['last_name'] %></td>
-                        <td><%= customerlist[i]['billing_addr'] %></td>
-                        <td><%= customerlist[i]['phone'] %></td>
+                        <td><%= productsupplierlist[i]['supplier_name'] %></td>
+                        <td><%= productsupplierlist[i]['supplier_addr'] %></td>
+                        <td><%= productsupplierlist[i]['phone'] %></td>
                     </tr>
                     <% } %>
                 </table>

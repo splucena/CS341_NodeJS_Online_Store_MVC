@@ -1,6 +1,4 @@
-//const User = require("./User");
 const pg = require("pg");
-//const bcrypt = require("bcrypt");
 
 const config = {
 	user: process.env.DB_USER,
@@ -13,9 +11,9 @@ const config = {
 //const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const pool = new pg.Pool(config);
 
-exports.customerlist = async function () {
+exports.productcategorylist = async function () {
 	try {
-		const res = await pool.query("SELECT * FROM customer");
+		const res = await pool.query("SELECT * FROM product_category");
 		return res.rows;
 	} catch (err) {
 		console.log(err);

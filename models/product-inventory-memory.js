@@ -13,9 +13,11 @@ const config = {
 //const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const pool = new pg.Pool(config);
 
-exports.customerlist = async function () {
+exports.productinventorylist = async function () {
 	try {
-		const res = await pool.query("SELECT * FROM customer");
+		const res = await pool.query(
+			"SELECT pp.product_name product_name, pi.total_stock quantity, pc.category_name category_name FROM product_inventory pi LEFT JOIN product_product pp ON pp.product_id = pi.product_id LEFT JOIN product_category pc ON pc.category_id = pp.category_id"
+		);
 		return res.rows;
 	} catch (err) {
 		console.log(err);

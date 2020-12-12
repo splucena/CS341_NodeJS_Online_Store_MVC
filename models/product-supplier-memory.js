@@ -13,9 +13,9 @@ const config = {
 //const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const pool = new pg.Pool(config);
 
-exports.customerlist = async function () {
+exports.productsupplierlist = async function () {
 	try {
-		const res = await pool.query("SELECT * FROM customer");
+		const res = await pool.query("SELECT * FROM product_supplier");
 		return res.rows;
 	} catch (err) {
 		console.log(err);
