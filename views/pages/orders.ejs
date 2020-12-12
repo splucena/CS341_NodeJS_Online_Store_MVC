@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <h1><%= title %></h1>
+        </div>
+        <div>
+            <a href='/users/add_user' class="btn btn-success">Add User</a>
+        </div>
+
+        <div class="main-users">
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer Name</th>
+                            <th>Status</th>
+                            <th>Date Created</th>
+                            <th>Shipping Date</th>
+                            <th>Amount</th>
+                            <th>Processor</th>
+                        </tr>
+                    </thead>
+                    <% if (orderlist.length > 0) { %>
+                    <% for (let i = 0; i < orderlist.length; i++) { %>
+                    <tr>
+                        <td><%= orderlist[i]['order_no'] %></td>
+                        <td><%= orderlist[i]['customer_name'] %></td>
+                        <td><%= orderlist[i]['status'] %></td>
+                        <td><%= orderlist[i]['date_created'] %></td>
+                        <td><%= orderlist[i]['shipping_date'] %></td>
+                        <td><%= orderlist[i]['total_amount'] %></td>
+                        <td><%= orderlist[i]['processor'] %></td>
+                    </tr>
+                    <% } %>
+                    <% } else { %>
+                    <tr>
+                        <td colspan="7">No records.</td>
+                    </tr>
+                    <% } %>
+                </table>
+                <script>
+                    function getDetails(userid) {
+                        console.log(userid);
+                        $.ajax({
+                            type: 'GET',
+                            url: '/users/user_detail/' + userid,
+                            dataType: 'json',
+                        }).done(result => {
+                            console.log(result['user'][0].first_name);
+                            let first_name = result['user'][0].first_name;
+                            let last_name = result['user'][0].last_name;
+                            let username = result['user'][0].username;
+                            let fullname = `${first_name} ${last_name}`;
+                            $("#fullname").html(fullname);
+                            $("#username").html(username);
+                        }).fail(err => {
+                            $("#fullname").html('---');
+                            $("#username").html('---');
+                        });
+                    }
+                </script>
+            </div>
+            <div class="user-details" id="user-details">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">User Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Full Name</td>
+                            <td id="fullname">---</td>
+                        </tr>
+                        <tr>
+                            <td>Username</td>
+                            <td id="username">---</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <% include ../partials/footer.ejs %>
+    <% include ../partials/scripts.ejs %>
+</body>
+
+</html>

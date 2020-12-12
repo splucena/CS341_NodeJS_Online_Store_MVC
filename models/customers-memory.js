@@ -10,8 +10,8 @@ const config = {
 };
 
 // connectionString: process.env.DATABASE_URL
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-//const pool = new pg.Pool(config);
+//const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new pg.Pool(config);
 
 exports.customerlist = async function () {
 	try {
