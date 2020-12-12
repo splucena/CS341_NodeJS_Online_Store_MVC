@@ -10,8 +10,8 @@ const config = {
 };
 
 // connectionString: process.env.DATABASE_URL
-//const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const pool = new pg.Pool(config);
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+//const pool = new pg.Pool(config);
 
 let users = [];
 let user = undefined;

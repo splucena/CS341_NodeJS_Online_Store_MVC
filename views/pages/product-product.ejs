@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+    <% include ../partials/nav.ejs %>
+    <main>
+        <div>
+            <h1><%= title %></h1>
+        </div>
+
+        <div class="main-customers">
+            <div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Supplier</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <% for (let i = 0; i < productproductlist.length; i++) { %>
+                    <tr>
+                        <td><%= productproductlist[i]['product_name'] %></td>
+                        <td><%= productproductlist[i]['category_name'] %></td>
+                        <td><%= productproductlist[i]['supplier_name'] %></td>
+                        <td><%= productproductlist[i]['unit_price'] %></td>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+    </main>
+    <% include ../partials/footer.ejs %>
+    <% include ../partials/scripts.ejs %>
+</body>
+
+</html>
