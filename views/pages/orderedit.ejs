@@ -121,7 +121,7 @@
                         </tr>
                         <tr>
                             <td colspan="3">Total</td>
-                            <td>$</td>
+                            <td>$<span id="tbl_total">0.00</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -193,6 +193,11 @@
                         let subtotal_rounded = (Math.round(subtotal * 100) / 100).toFixed(2);
                         console.log([quantity, unit_price, subtotal]);
                         $('#' + tr_cloned_id + " td:nth-child(4)").html('$' + subtotal_rounded);
+
+                        // table total
+                        let tbl_total = parseFloat($("#tbl_total").text());
+                        tbl_total = parseFloat(tbl_total) + parseFloat(subtotal_rounded);
+                        $("#tbl_total").html(tbl_total);
                     }
                 })
             }
