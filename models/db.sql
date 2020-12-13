@@ -4,7 +4,8 @@
 TABLE: product_category
 */
 
-CREATE TABLE product_category(
+CREATE TABLE product_category
+(
     category_id SERIAL PRIMARY KEY,
     category_name VARCHAR(255) NOT NULL,
     category_desc TEXT,
@@ -15,7 +16,8 @@ CREATE TABLE product_category(
 TABLE: product_supplier
 */
 
-CREATE TABLE product_supplier(
+CREATE TABLE product_supplier
+(
     supplier_id SERIAL PRIMARY KEY,
     supplier_name VARCHAR(255),
     supplier_addr VARCHAR(255),
@@ -28,7 +30,8 @@ CREATE TABLE product_supplier(
 TABLE: product_product
 */
 
-CREATE TABLE product_product(
+CREATE TABLE product_product
+(
     product_id SERIAL PRIMARY KEY,
     product_name VARCHAR(255),
     unit_price FLOAT,
@@ -41,7 +44,8 @@ CREATE TABLE product_product(
 TABLE: product_inventory
 */
 
-CREATE TABLE product_inventory(
+CREATE TABLE product_inventory
+(
     inventory_id SERIAL PRIMARY KEY,
     product_id INT REFERENCES product_product(product_id),
     total_stock INT DEFAULT 0,
@@ -53,7 +57,8 @@ CREATE TABLE product_inventory(
 TABLE: users
 */
 
-CREATE TABLE users(
+CREATE TABLE users
+(
     user_id SERIAL PRIMARY KEY,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
@@ -68,7 +73,8 @@ CREATE TABLE users(
 TABLE: customer
 */
 
-CREATE TABLE customer(
+CREATE TABLE customer
+(
     customer_id SERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -85,8 +91,12 @@ CREATE TABLE customer(
 TABLE: orders
 */
 
-CREATE TYPE order_status AS ENUM('draft', 'processing', 'in_transit', 'delivered');
-CREATE TABLE orders(
+CREATE TYPE order_status AS ENUM
+('draft', 'processing', 'in_transit', 'delivered');
+ALTER TYPE order_status
+ADD VALUE 'cancelled';
+CREATE TABLE orders
+(
     order_id SERIAL PRIMARY KEY,
     order_name VARCHAR(255) NOT NULL,
     order_number VARCHAR(10) NOT NULL,
@@ -103,7 +113,8 @@ CREATE TABLE orders(
 TABLE: order_line_item
 */
 
-CREATE TABLE order_item_line(
+CREATE TABLE order_item_line
+(
     order_item_id SERIAL PRIMARY KEY,
     order_id INT REFERENCES orders(order_id),
     product_id INT REFERENCES product_product(product_id),
@@ -116,7 +127,8 @@ CREATE TABLE order_item_line(
 TABLE: invoice
 */
 
-CREATE TABLE invoice(
+CREATE TABLE invoice
+(
     invoice_id SERIAL PRIMARY KEY,
     order_number VARCHAR(10) NOT NULL,
     invoice_date TIMESTAMP DEFAULT NOW(),

@@ -15,28 +15,48 @@
         </div>
 
         <form action="/orders/save_order" method="POST">
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label for="orderid">Order ID</label>
                 <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
                 <% if (docreate) { %>
                 <input type="hidden" class="form-control" name="orderid" value="">
                 <% } else { %>
-                <input type="hidden" name="userid" value="<%= orderid %>">
+                <input type="hidden" name="orderid" value="<%= orderid %>">
                 <span><%= orderid %></span>
                 <% } %>
-            </div>
+            </div>-->
             <div class="form-group">
                 <label for="order_no">Order #</label>
                 <input type="text" class="form-control" name="order_no" value="<%= order ? order.order_no : '' %>">
             </div>
             <div class="form-group">
-                <label for="status">Status</label>
-                <input type="text" class="form-control" name="status" value="<%= order ?  order.status : '' %>">
+                <label for="order_status">Status</label>
+                <select class="form-control" name="order_status" id="order_status">
+                    <% if (order_status.length > 0) { %>
+                    <option>Choose Status</option>
+                    <% for (let i = 0; i < order_status.length; i++) { %>
+                    <option value="<%= order_status[i][0] %>">
+                        <%= order_status[i][1] %>
+                    </option>
+                    <% } %>
+
+                    <% } else {%>
+                    <option>Choose Status</option>
+                    <% } %>
+                </select>
             </div>
             <div class="form-group">
                 <label for="customer_name">Customer</label>
-                <input type="text" class="form-control" name="customer_name"
-                    value="<%= order ? order.customer_name : '' %>">
+                <select class="form-control" name="customers" id="customers">
+                    <option>Choose Customer</option>
+                    <% if (customerlist.length > 0) { %>
+                    <% for (let i = 0; i < customerlist.length; i++) { %>
+                    <option id="<%= customerlist[i]['customer_id'] %>" value="<%= customerlist[i]['customer_id'] %>">
+                        <%= customerlist[i]['first_name'] + ' ' + customerlist[i]['last_name'] %>
+                    </option>
+                    <% } %>
+                    <% } %>
+                </select>
             </div>
             <div class="form-group">
                 <label for="date_created">Date Created</label>
@@ -55,14 +75,128 @@
             </div>
             <div class="form-group">
                 <label for="processed_by">Processed by</label>
-                <input type="text" class="form-control" name="processed_by"
-                    value="<%= order ?  order.processed_by : '' %>">
+                <select class="form-control" name="users" id="users">
+                    <option>Choose Processor</option>
+                    <% if (userlist.length > 0) { %>
+
+                    <% for (let i = 0; i < userlist.length; i++) { %>
+                    <option id="<%= userlist[i]['user_id'] %>" value="<%= userlist[i]['user_id'] %>">
+                        <%= userlist[i]['first_name'] + ' ' + userlist[i]['last_name'] %>
+                    </option>
+                    <% } %>
+                    <% } %>
+                </select>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="button" onclick="addItem()">Add Item</button>
+                <br>
+                <br>
+                <label>Order Items</label>
+                <table class="table" id="tbl_order_items">
+                    <thead>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </thead>
+                    <tbody id="tbody_order_items">
+                        <tr id="tr_0">
+                            <td>
+                                <select class="form-control" name="products" id="products">
+                                    <option value="choose_product">Choose Product</option>
+                                    <% if (productslist.length > 0) { %>
+                                    <% for (let i=0; i < productslist.length; i++) { %>
+                                    <option value="<%= productslist[i]['product_id']%>">
+                                        <%= productslist[i]['product_name'] %>
+                                    </option>
+                                    <% } %>
+                                    <% } %>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="quantity" name="quantity">
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Total</td>
+                            <td>$</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Save</button>
                 <a class="btn btn-success" href="/orders">Back to List</a>
             </div>
         </form>
+        <script>
+            function addItem() {
+                console.log('Add item...');
+                let tr_0 = document.getElementById('tr_0');
+                let tbl_order_items = document.getElementById('tbl_order_items');
+                let tbody_order_items = document.getElementById('tbody_order_items');
+                let tr_cloned = tr_0.cloneNode(true);
+                let tbody_rows_length = tbody_order_items.rows.length;
+                let tr_cloned_id = 'tr_' + (tbody_rows_length - 1);
+                tr_cloned.id = tr_cloned_id;
+                //tr_cloned.td[0].select.id = "111";
+                // Insert cloned tr before the last row
+                console.log(tbl_order_items.rows.length);
+                tbody_order_items.insertBefore(tr_cloned, tbody_order_items.childNodes[tbody_order_items.rows.length]);
+
+                // add event listener to the newly cloned row
+                document.getElementById(tr_cloned_id).addEventListener('change', (e) => {
+                    /*console.log(e.target.id);
+                    let clicked_element_id = e.target.id;
+                    if (clicked_element_id) {
+                        let clicked_element_parent_id = document.getElementById(clicked_element_id).parentNode
+                            .id;
+                        console.log(clicked_element_parent_id);
+                    }*/
+                    //console.log(e.childNodes);
+                    console.log(tr_cloned_id);
+
+                    let target_type = e.target.type;
+                    console.log(target_type);
+
+                    // product select
+                    if (target_type === 'select-one') {
+                        let product_id = $('#' + tr_cloned_id + " select").val();
+                        console.log(product_id);
+
+                        $.ajax({
+                            type: 'GET',
+                            url: '/product-product/product_detail/' + product_id,
+                            dataType: 'json'
+                        }).done(result => {
+                            // success
+                            if (result['product']) {
+                                console.log(result['product'][0]['unit_price']);
+                                let unit_price = result['product'][0]['unit_price'];
+                                $('#' + tr_cloned_id + " td:nth-child(3)").html(unit_price);
+                            } else {
+                                $('#' + tr_cloned_id + " td:nth-child(3)").html('');
+                            }
+                        }).fail(err => {
+                            // error
+                            console.log(err);
+                        })
+                    }
+
+                    // quantity
+                    if (target_type === 'text') {
+                        let quantity = $('#' + tr_cloned_id + " input").val();
+                        let unit_price = $('#' + tr_cloned_id + " td:nth-child(3)").text();
+                        let subtotal = parseFloat(unit_price) * parseInt(quantity);
+                        let subtotal_rounded = (Math.round(subtotal * 100) / 100).toFixed(2);
+                        console.log([quantity, unit_price, subtotal]);
+                        $('#' + tr_cloned_id + " td:nth-child(4)").html('$' + subtotal_rounded);
+                    }
+                })
+            }
+        </script>
     </main>
     <% include ../partials/footer.ejs %>
     <% include ../partials/scripts.ejs %>

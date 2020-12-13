@@ -26,7 +26,7 @@ exports.orderlist = async function () {
 			LEFT JOIN customer c ON c.customer_id=o.customer_id \
 			LEFT JOIN users u ON u.user_id=o.user_id";
 		const res = await pool.query(query);
-		console.log(res.rows);
+		//console.log(res.rows);
 		return res.rows;
 	} catch (err) {
 		console.log(err);
@@ -58,4 +58,34 @@ exports.getOrderDetail = async function (orderid) {
 	} catch (err) {
 		console.log("Database " + err);
 	}
+};
+
+// Save order
+exports.create = async function (order) {
+	const order_no = order["order_no"];
+	const order_status = order["order_status"];
+	const customer_id = order["customer_id"];
+	const user_id = order["user_id"];
+	const total_amount = order["total_amount"];
+	const create_date = order["create_date"];
+	const shipping_date = order["shipping_date"];
+	//console.log(order);
+	const insert =
+		"INSERT INTO orders \
+		(order_number, order_name, order_status, total_amount, create_date, shipping_date, customer_id, user_id) \
+		VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING order_id";
+	const values = [
+		order_no,
+		order_no,
+		order_status,
+		total_amount,
+		create_date,
+		shipping_date,
+		customer_id,
+		user_id,
+	];
+	let result = await pool.query(insert, values);
+	order_id = result.rows[0].order_id;
+	console.log(order_id);
+	return true;
 };

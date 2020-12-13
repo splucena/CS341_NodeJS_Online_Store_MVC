@@ -11,4 +11,10 @@ router.get("/", async (req, res, next) => {
 	});
 });
 
+router.get("/product_detail/:id", async (req, res, next) => {
+	let product_id = req.params.id;
+	let product = await products.getProductDetail(product_id);
+	res.send({ product: product });
+});
+
 module.exports = router;
