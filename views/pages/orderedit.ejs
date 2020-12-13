@@ -15,8 +15,8 @@
         </div>
 
         <form action="/orders/save_order" method="POST">
-            <!--<div class="form-group">
-                <label for="orderid">Order ID</label>
+            <div class="form-group">
+                <label for="orderid"></label>
                 <input type="hidden" name="docreate" value="<%= docreate ? 'create' : 'update' %>">
                 <% if (docreate) { %>
                 <input type="hidden" class="form-control" name="orderid" value="">
@@ -24,14 +24,15 @@
                 <input type="hidden" name="orderid" value="<%= orderid %>">
                 <span><%= orderid %></span>
                 <% } %>
-            </div>-->
+            </div>
             <div class="form-group">
                 <label for="order_no">Order #</label>
-                <input type="text" class="form-control" name="order_no" value="<%= order ? order.order_no : '' %>">
+                <input type="text" class="form-control" name="order_no" value="<%= order ? order.order_no : '' %>"
+                    required>
             </div>
             <div class="form-group">
                 <label for="order_status">Status</label>
-                <select class="form-control" name="order_status" id="order_status">
+                <select class="form-control" name="order_status" id="order_status" required>
                     <% if (order_status.length > 0) { %>
                     <option>Choose Status</option>
                     <% for (let i = 0; i < order_status.length; i++) { %>
@@ -47,7 +48,7 @@
             </div>
             <div class="form-group">
                 <label for="customer_name">Customer</label>
-                <select class="form-control" name="customers" id="customers">
+                <select class="form-control" name="customers" id="customers" required>
                     <option>Choose Customer</option>
                     <% if (customerlist.length > 0) { %>
                     <% for (let i = 0; i < customerlist.length; i++) { %>
@@ -61,21 +62,21 @@
             <div class="form-group">
                 <label for="date_created">Date Created</label>
                 <input type="date" class="form-control" name="date_created"
-                    value="<%= order ?  order.date_created : '' %>">
+                    value="<%= order ?  order.date_created : '' %>" required>
             </div>
             <div class="form-group">
                 <label for="shipping_date">Shipping Date</label>
                 <input type="date" class="form-control" name="shipping_date"
-                    value="<%= order ?  order.shipping_date : '' %>">
+                    value="<%= order ?  order.shipping_date : '' %>" required>
             </div>
             <div class="form-group">
                 <label for="total_amount">Total Amount</label>
-                <input type="text" class="form-control" name="total_amount"
-                    value="<%= order ?  order.total_amount : '' %>">
+                <input type="text" class="form-control" id="total_amount" name="total_amount"
+                    value="<%= order ?  order.total_amount : '' %>" readonly>
             </div>
             <div class="form-group">
                 <label for="processed_by">Processed by</label>
-                <select class="form-control" name="users" id="users">
+                <select class="form-control" name="users" id="users" required>
                     <option>Choose Processor</option>
                     <% if (userlist.length > 0) { %>
 
@@ -102,7 +103,7 @@
                     <tbody id="tbody_order_items">
                         <tr id="tr_0">
                             <td>
-                                <select class="form-control" name="products" id="products">
+                                <select class="form-control" name="products" id="products" required>
                                     <option value="choose_product">Choose Product</option>
                                     <% if (productslist.length > 0) { %>
                                     <% for (let i=0; i < productslist.length; i++) { %>
@@ -114,14 +115,14 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control" id="quantity" name="quantity">
+                                <input type="text" class="form-control" id="quantity" name="quantity" required>
                             </td>
-                            <td></td>
+                            <td><input type="text" class="form-control" id="unit_price" name="unit_price" readonly></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="3">Total</td>
-                            <td>$<span id="tbl_total">0.00</span></td>
+                            <td>$<span name="unit_price" id="tbl_total">0.00</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -132,6 +133,54 @@
             </div>
         </form>
         <script>
+            function addEventListenerOrder(e, _id) {
+                //console.log(tr_cloned_id);
+
+                let tr_cloned_id = _id;
+
+                let target_type = e.target.type;
+                console.log(target_type);
+                // product select
+                if (target_type === 'select-one') {
+                    let product_id = $('#' + tr_cloned_id + " select").val();
+                    console.log(product_id);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/product-product/product_detail/' + product_id,
+                        dataType: 'json'
+                    }).done(result => {
+                        // success
+                        if (result['product']) {
+                            console.log(result['product'][0]['unit_price']);
+                            let unit_price = result['product'][0]['unit_price'];
+                            $('#' + tr_cloned_id + " td:nth-child(3) input").val(unit_price);
+                        } else {
+                            $('#' + tr_cloned_id + " td:nth-child(3)").html('');
+                        }
+                    }).fail(err => {
+                        // error
+                        console.log(err);
+                    })
+                }
+
+                // quantity
+                if (target_type === 'text') {
+                    let quantity = $('#' + tr_cloned_id + " input").val();
+                    let unit_price = $('#' + tr_cloned_id + " td:nth-child(3) input").val();
+                    let subtotal = parseFloat(unit_price) * parseInt(quantity);
+                    let subtotal_rounded = (Math.round(subtotal * 100) / 100).toFixed(2);
+                    console.log([quantity, unit_price, subtotal]);
+                    $('#' + tr_cloned_id + " td:nth-child(4)").html('$' + subtotal_rounded);
+
+                    // table total
+                    let tbl_total = parseFloat($("#tbl_total").text());
+                    tbl_total = parseFloat(tbl_total) + parseFloat(subtotal_rounded);
+                    $("#tbl_total").html(tbl_total);
+                    $("#total_amount").val(tbl_total);
+                }
+            }
+
             function addItem() {
                 console.log('Add item...');
                 let tr_0 = document.getElementById('tr_0');
@@ -146,61 +195,17 @@
                 console.log(tbl_order_items.rows.length);
                 tbody_order_items.insertBefore(tr_cloned, tbody_order_items.childNodes[tbody_order_items.rows.length]);
 
+                $('#' + tr_cloned_id + " input").val('');
                 // add event listener to the newly cloned row
                 document.getElementById(tr_cloned_id).addEventListener('change', (e) => {
-                    /*console.log(e.target.id);
-                    let clicked_element_id = e.target.id;
-                    if (clicked_element_id) {
-                        let clicked_element_parent_id = document.getElementById(clicked_element_id).parentNode
-                            .id;
-                        console.log(clicked_element_parent_id);
-                    }*/
-                    //console.log(e.childNodes);
-                    console.log(tr_cloned_id);
-
-                    let target_type = e.target.type;
-                    console.log(target_type);
-
-                    // product select
-                    if (target_type === 'select-one') {
-                        let product_id = $('#' + tr_cloned_id + " select").val();
-                        console.log(product_id);
-
-                        $.ajax({
-                            type: 'GET',
-                            url: '/product-product/product_detail/' + product_id,
-                            dataType: 'json'
-                        }).done(result => {
-                            // success
-                            if (result['product']) {
-                                console.log(result['product'][0]['unit_price']);
-                                let unit_price = result['product'][0]['unit_price'];
-                                $('#' + tr_cloned_id + " td:nth-child(3)").html(unit_price);
-                            } else {
-                                $('#' + tr_cloned_id + " td:nth-child(3)").html('');
-                            }
-                        }).fail(err => {
-                            // error
-                            console.log(err);
-                        })
-                    }
-
-                    // quantity
-                    if (target_type === 'text') {
-                        let quantity = $('#' + tr_cloned_id + " input").val();
-                        let unit_price = $('#' + tr_cloned_id + " td:nth-child(3)").text();
-                        let subtotal = parseFloat(unit_price) * parseInt(quantity);
-                        let subtotal_rounded = (Math.round(subtotal * 100) / 100).toFixed(2);
-                        console.log([quantity, unit_price, subtotal]);
-                        $('#' + tr_cloned_id + " td:nth-child(4)").html('$' + subtotal_rounded);
-
-                        // table total
-                        let tbl_total = parseFloat($("#tbl_total").text());
-                        tbl_total = parseFloat(tbl_total) + parseFloat(subtotal_rounded);
-                        $("#tbl_total").html(tbl_total);
-                    }
+                    addEventListenerOrder(e, tr_cloned_id);
                 })
             }
+
+            // add event listener to the row to be cloned
+            document.getElementById("tr_0").addEventListener('change', (e) => {
+                addEventListenerOrder(e, "tr_0");
+            })
         </script>
     </main>
     <% include ../partials/footer.ejs %>

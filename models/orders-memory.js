@@ -69,7 +69,9 @@ exports.create = async function (order) {
 	const total_amount = order["total_amount"];
 	const create_date = order["create_date"];
 	const shipping_date = order["shipping_date"];
-	//console.log(order);
+
+	console.log(order);
+
 	const insert =
 		"INSERT INTO orders \
 		(order_number, order_name, order_status, total_amount, create_date, shipping_date, customer_id, user_id) \
@@ -86,6 +88,29 @@ exports.create = async function (order) {
 	];
 	let result = await pool.query(insert, values);
 	order_id = result.rows[0].order_id;
+
 	console.log(order_id);
+
+	const products = order["products"];
+	const quantities = order["quantity"];
+	const unit_prices = order["unit_price"];
+
+	for (let i = 0; i < products.length; i++) {
+		let insert_order_item =
+			"INSERT INTO order_item_line (order_id, product_id, unit_price, quantity) \
+			 VALUES($1, $2, $3, $4) RETURNING order_item_id";
+		let values_order_item = [
+			order_id,
+			parseInt(products[i]),
+			parseFloat(unit_prices[i]),
+			parseInt(quantities[i]),
+		];
+		let result_order_item = await pool.query(
+			insert_order_item,
+			values_order_item
+		);
+		order_item_id = result_order_item.rows[0].order_item_id;
+		console.log(order_item_id);
+	}
 	return true;
 };

@@ -62,6 +62,9 @@ router.post("/save_order", (req, res, next) => {
 	const total_amount = req.body.total_amount;
 	const create_date = req.body.date_created;
 	const shipping_date = req.body.shipping_date;
+	const products = req.body.products;
+	const quantity = req.body.quantity;
+	const unit_price = req.body.unit_price;
 	/*console.log([
 		req.body,
 		operation,
@@ -79,7 +82,7 @@ router.post("/save_order", (req, res, next) => {
 	let order = null;
 	// save order
 	if (operation === "create") {
-		/*order = orders.create({
+		order = orders.create({
 			order_no: order_no,
 			order_status: order_status,
 			customer_id: customer_id,
@@ -87,7 +90,12 @@ router.post("/save_order", (req, res, next) => {
 			total_amount: total_amount,
 			create_date: create_date,
 			shipping_date: shipping_date,
-		});*/
+			products: products,
+			quantity: quantity,
+			unit_price: unit_price,
+		});
+
+		//res.redirect("/orders/");
 	} else {
 		// update order
 	}
